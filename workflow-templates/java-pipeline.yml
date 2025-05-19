@@ -165,8 +165,11 @@ jobs:
           EOF
           
       - name: Publish WAR to GitHub Packages
-        run: mvn deploy -DskipTests --settings ~/.m2/settings.xml
-
+        # run: mvn deploy -DskipTests --settings ~/.m2/settings.xml
+        run:  mvn deploy -Dgithub.user=${{ github.actor }} -Dgithub.repo=${{ github.event.repository.name }} --settings ~/.m2/settings.xml -DskipTests
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+       
       - name: Log in to GHCR
         run: echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u ${{ secrets.GHCR_USERNAME }} --password-stdin
 
